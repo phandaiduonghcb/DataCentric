@@ -1,0 +1,8 @@
+pytorch-lightning==1.7
+torchmetrics
+wandb
+hydra-core
+hydra-colorlog
+hydra-optuna-sweeper
+timm
+opencv-python

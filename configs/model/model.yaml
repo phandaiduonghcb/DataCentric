@@ -1,0 +1,25 @@
+name: resnet_s
+sync_dist: True # Use when training with multiple gpu
+arch:
+  _target_: networks.Resnet
+  n_class: 10
+#   model_name: resnext50_32x4d
+  model_name: resnet50 # resnet50
+  pretrained: True
+monitor: "val/loss"
+loss:
+  _target_: torch.nn.CrossEntropyLoss
+  # label_smoothing: 0.0
+optimizer:
+  _target_: torch.optim.AdamW
+  lr: 3e-4
+  weight_decay: 1e-6
+lr_scheduler:
+  _target_: torch.optim.lr_scheduler.StepLR
+  step_size: 5
+  gamma: 0.2
+# lr_scheduler:
+#   _target_: torch.optim.lr_scheduler.CosineAnnealingWarmRestarts
+#   T_0: 10
+#   T_mult: 1
+#   eta_min: 1e-6
