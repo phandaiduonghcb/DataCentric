@@ -21,6 +21,7 @@ class TIMMModel(LightningModule):
         self.test_acc = torchmetrics.Accuracy(task="multiclass", num_classes=10, top_k=1)
         self.model = instantiate(self.config.arch)
         self.test_table = []
+        self.predicted_targets = []
 
     def configure_optimizers(self):
         optimizer = instantiate(self.config.optimizer, params=self.model.parameters())
@@ -115,6 +116,7 @@ class TIMMModel(LightningModule):
         return {"test_loss": test_loss}
     def predict_step(self, batch, batch_idx, dataloader_idx=0):
         loss, preds, targets = self.step(batch)
+        self.predicted_targets.append(targets)
         return preds
     
     def on_epoch_end(self):
@@ -125,3 +127,6 @@ class TIMMModel(LightningModule):
         columns = ["true","pred", "image","path"]
         # [build up your predictions data as above]
         self.logger.log_table(key='wrong_pred_images', columns=columns, data= self.test_table)
+    
+    def on_predict_end(self) -> None:
+        self.predicted_targets = torch.cat(self.predicted_targets)

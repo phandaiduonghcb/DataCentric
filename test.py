@@ -49,9 +49,7 @@ def test(config):
             static_graph=config.ddp_plugin.static_graph,
         )
     run = wandb.init()
-    artifact = run.use_artifact(config.test.wandb_saved_checkpoint, type='model')
-    artifact_dir = artifact.download()
-    model = TIMMModel.load_from_checkpoint(Path(artifact_dir) / "model.ckpt")
+    model = TIMMModel.load_from_checkpoint("/DataCentric/trained_models/baseline.ckpt")
     model.eval()
     datamodule = CustomDataModule(config.dataset)
     datamodule.setup()
@@ -61,10 +59,7 @@ def test(config):
     )
 
     wandb_logger.watch(model, log="parameters", log_graph=False)
-#     predictions = trainer.predict(model, datamodule.val_dataloader())
     trainer.test(model, datamodule=datamodule)
-    print(config.test.wandb_saved_checkpoint)
-    print(Path(artifact_dir) / "model.ckpt")
     wandb.finish()
 
 @hydra.main(config_path="configs", config_name="baseline_s", version_base='1.1')

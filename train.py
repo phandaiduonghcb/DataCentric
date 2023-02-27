@@ -26,7 +26,7 @@ wandb.login(key='ff6d8c7f99c93d809cf8a344fe9dd48506a40e3a')
 def train(config):
     wandb_logger = WandbLogger(
         project="DataCentric",
-        log_model='all',
+        log_model=True,
         settings=wandb.Settings(start_method="spawn"),
         name=Path.cwd().stem,
         dir=Path.cwd()
@@ -71,9 +71,15 @@ def train(config):
     wandb_logger.watch(model, log="parameters", log_graph=False)
     trainer.fit(model, datamodule=datamodule)
     best_ckpt_path = glob.glob(os.path.join(os.path.join(os.getcwd(), config.model_ckpt.dirpath), "checkpoint*"))[0]
-
+    # best_ckpt_path = "/DataCentric/trained_models/raw_augmented.ckpt"
     model = TIMMModel.load_from_checkpoint(best_ckpt_path)
     trainer.test(model, datamodule=datamodule)
+    predictions = trainer.predict(model, datamodule.val_dataloader())
+    predictions = torch.cat(predictions)
+    wandb.log({"Confusion matrix": wandb.plot.confusion_matrix(
+        preds=predictions.cpu().numpy(), y_true = model.predicted_targets.cpu().numpy(),
+        class_names= [str(i) for i in range(1,11)]
+    )})
     print(config.dataset.train_data_dir)
     print(config.model_ckpt.dirpath)
     print(best_ckpt_path)
