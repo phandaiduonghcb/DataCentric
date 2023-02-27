@@ -1,5 +1,5 @@
 name: baseline
-state: train # train/test/debug
+state: test # train/test/debug
 seed: 6789
 
 work_dir: ${hydra:runtime.cwd}
