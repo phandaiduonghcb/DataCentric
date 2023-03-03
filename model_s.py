@@ -43,6 +43,8 @@ class TIMMModel(LightningModule):
         logits = self.forward(x)
         loss = self.criterion(logits,y)
         preds = torch.argmax(logits, dim=1)
+        # softmax = nn.Softmax(dim=1) #
+        # preds = softmax(logits) #
         return loss, preds, y
 
     def training_step(self, batch, batch_idx):
@@ -89,14 +91,23 @@ class TIMMModel(LightningModule):
 
     def test_step(self, batch, batch_idx) -> None:
         test_loss, test_preds, test_targets = self.step(batch)
+
+        # test_probs = torch.clone(test_preds) #
+        # test_preds = torch.argmax(test_probs, dim=1) #
+
         test_acc = self.test_acc(test_preds, test_targets)
 
         mask = (test_preds != test_targets)
         idxs = torch.argwhere(mask)
 
+        # probs, classes = torch.topk(test_probs, k=3,dim=1) #
+
+        assert (batch[1] == test_targets).all()
         for i in idxs:
-            self.test_table.append([str(test_targets[i].item()+1), str(test_preds[i].item()+1), wandb.Image(batch[0][i]), batch[2][i]])
-            
+            top_3_indices = torch.topk(test_probs[i],k=3)[1]
+            self.test_table.append([(test_targets[i].item()), test_preds[i].item(), wandb.Image(batch[0][i]), batch[2][i]])
+            # self.test_table.append([(test_targets[i]), classes[i],probs[i], wandb.Image(batch[0][i]), batch[2][i]]) #
+
         self.log(
             "test/loss",
             test_loss,
@@ -123,10 +134,10 @@ class TIMMModel(LightningModule):
         self.train_acc.reset()
         self.val_acc.reset()
 
-    def on_test_end(self):
-        columns = ["true","pred", "image","path"]
-        # [build up your predictions data as above]
-        self.logger.log_table(key='wrong_pred_images', columns=columns, data= self.test_table)
+    # def on_test_end(self):
+    #     columns = ["true","pred", "image","path"]
+    #     # [build up your predictions data as above]
+    #     self.logger.log_table(key='wrong_pred_images', columns=columns, data= self.test_table)
     
     def on_predict_end(self) -> None:
         self.predicted_targets = torch.cat(self.predicted_targets)

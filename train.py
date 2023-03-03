@@ -69,20 +69,27 @@ def train(config):
     )
 
     wandb_logger.watch(model, log="parameters", log_graph=False)
-    # trainer.fit(model, datamodule=datamodule)
-    best_ckpt_path = glob.glob(os.path.join(os.path.join(os.getcwd(), config.model_ckpt.dirpath), "checkpoint*"))[0]
-    best_ckpt_path = "/DataCentric/trained_models/raw_augmented.ckpt"
-    model = TIMMModel.load_from_checkpoint(best_ckpt_path)
-    trainer.test(model, datamodule=datamodule)
-    predictions = trainer.predict(model, datamodule.val_dataloader())
+    trainer.fit(model, datamodule=datamodule)
+    # best_ckpt_path = glob.glob(os.path.join(os.path.join(os.getcwd(), config.model_ckpt.dirpath), "checkpoint*"))[0]
+    # best_ckpt_path = "/DataCentric/trained_models/raw_augmented.ckpt"
+    # model = TIMMModel.load_from_checkpoint(best_ckpt_path)
+    model.eval()
+    trainer.test(model, datamodule=datamodule,ckpt_path='best')
+    columns = ["true","pred", "image","path"]
+    classes = np.array(datamodule.test_dataset.dataset.classes)
+    for i in range(len(model.test_table)):
+        model.test_table[i][0] = classes[model.test_table[i][0]]
+        model.test_table[i][1] = classes[model.test_table[i][1]]
+        
+    model.logger.log_table(key='wrong_pred_images', columns=columns, data= model.test_table)
+    predictions = trainer.predict(model, datamodule.val_dataloader(), ckpt_path='best')
     predictions = torch.cat(predictions)
     wandb.log({"Confusion matrix": wandb.plot.confusion_matrix(
         preds=predictions.cpu().numpy(), y_true = model.predicted_targets.cpu().numpy(),
-        class_names= [str(i) for i in range(1,11)]
+        class_names= classes
     )})
     print(config.dataset.train_data_dir)
     print(config.model_ckpt.dirpath)
-    print(best_ckpt_path)
     wandb.finish()
 
 def test(config):
@@ -128,12 +135,21 @@ def test(config):
 
     wandb_logger.watch(model, log="parameters", log_graph=False)
     trainer.test(model, datamodule=datamodule)
+    columns = ["true","pred", "image","path"] 
+    columns = ["true","classes", "probs","image"] #
+    classes = np.array(datamodule.test_dataset.dataset.classes)
+    for i in range(len(model.test_table)):
+        model.test_table[i][0] = classes[model.test_table[i][0]]
+        model.test_table[i][1] = np.array(classes)[model.test_table[i][1].cpu().numpy()]
+        model.test_table[i] = model.test_table[i][:-1]
+        
+    model.logger.log_table(key='wrong_pred_images', columns=columns, data= model.test_table)
     predictions = trainer.predict(model, datamodule.val_dataloader())
     predictions = torch.cat(predictions)
-    wandb.log({"Confusion matrix": wandb.plot.confusion_matrix(
-        preds=predictions.cpu().numpy(), y_true = model.predicted_targets.cpu().numpy(),
-        class_names= [str(i) for i in range(1,11)]
-    )})
+    # wandb.log({"Confusion matrix": wandb.plot.confusion_matrix(
+    #     preds=predictions.cpu().numpy(), y_true = model.predicted_targets.cpu().numpy(),
+    #     class_names= classes
+    # )})
     
     print(config.test.saved_checkpoint_path)
     wandb.finish()

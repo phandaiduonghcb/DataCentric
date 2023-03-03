@@ -1,0 +1,8 @@
+label,path,type,checker
+x,/DataCentric/data/train/ix/ae96c6da-ce5d-11eb-b317-38f9d35ea60f.png,relabel,Hao
+x,/DataCentric/data/train/v/af6ca11a-ce5d-11eb-b317-38f9d35ea60f.png,relabel,Hao
+ii,/DataCentric/data/train/i/ac1ea5bc-ce5d-11eb-b317-38f9d35ea60f.png,relabel,Hao
+iii,/DataCentric/data/train/iv/ae62097c-ce5d-11eb-b317-38f9d35ea60f.png,relabel,Hao
+vi,/DataCentric/data/train/v/af8dac70-ce5d-11eb-b317-38f9d35ea60f.png,relabel,Hao
+ii,/DataCentric/data/train/viii/ad7dedc8-ce5d-11eb-b317-38f9d35ea60f.png,relabel,Hao
+ix,/DataCentric/data/train/iv/adf08b30-ce5d-11eb-b317-38f9d35ea60f.png,relabel,Hao

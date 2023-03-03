@@ -17,7 +17,7 @@ class CustomDataset(Dataset):
         self.data_dir = Path(data_dir)
         self.input_size = crop_size
         self.transform = get_image_transformer(self.input_size, augment, augment_config)
-        self.dataset = ImageFolder(root=self.data_dir)
+        self.dataset = ImageFolder(root=self.data_dir,)
 
     def __getitem__(self,index):
         img_path = self.dataset.samples[index][0]

@@ -1,0 +1,17 @@
+,label,path,type,checker
+0,iii,/DataCentric/data/train/i/ac156ed4-ce5d-11eb-b317-38f9d35ea60f.png,relabel,anh
+1,ii,/DataCentric/data/train/i/ac315d6a-ce5d-11eb-b317-38f9d35ea60f.png,relabel,anh
+2,v,/DataCentric/data/train/ii/ab5d949e-ce5d-11eb-b317-38f9d35ea60f.png,relabel,anh
+3,vi,/DataCentric/data/train/iii/b0a13faa-ce5d-11eb-b317-38f9d35ea60f.png,relabel,anh
+4,ii,/DataCentric/data/train/iii/b0b3a50a-ce5d-11eb-b317-38f9d35ea60f.png,relabel,anh
+5,x,/DataCentric/data/train/iv/addb9af4-ce5d-11eb-b317-38f9d35ea60f.png,relabel,anh
+6,ii,/DataCentric/data/train/iv/ae0745aa-ce5d-11eb-b317-38f9d35ea60f.png,relabel,anh
+7,v,/DataCentric/data/train/iv/ae09c974-ce5d-11eb-b317-38f9d35ea60f.png,relabel,anh
+8,ix,/DataCentric/data/train/iv/ae55b49c-ce5d-11eb-b317-38f9d35ea60f.png,relabel,anh
+9,x,/DataCentric/data/train/ix/af0087a0-ce5d-11eb-b317-38f9d35ea60f.png,relabel,anh
+10,x,/DataCentric/data/train/v/af357f8c-ce5d-11eb-b317-38f9d35ea60f.png,relabel,anh
+11,v,/DataCentric/data/train/vi/aac4401e-ce5d-11eb-b317-38f9d35ea60f.png,relabel,anh
+12,ii,/DataCentric/data/train/viii/ad105f2e-ce5d-11eb-b317-38f9d35ea60f.png,relabel,anh
+13,ii,/DataCentric/data/train/viii/ad9a139a-ce5d-11eb-b317-38f9d35ea60f.png,relabel,anh
+14,v,/DataCentric/data/train/x/af9a0876-ce5d-11eb-b317-38f9d35ea60f.png,relabel,anh
+15,v,/DataCentric/data/train/x/af9e6b64-ce5d-11eb-b317-38f9d35ea60f.png,relabel,anh
