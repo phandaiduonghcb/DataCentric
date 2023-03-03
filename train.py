@@ -156,7 +156,7 @@ def test(config):
 
 @hydra.main(config_path="configs", config_name="baseline_s", version_base='1.1')
 def main(config: DictConfig):
-    log.info("Zalo AI Challenge - Liveness Detection")
+    log.info("Data Centric - Romainan Numbers:")
     log.info(f"Current working directory : {Path.cwd()}")
     if config.state == "train":
         train(config)
